@@ -1,0 +1,174 @@
+//Main
+import java.util.ArrayList;
+import java.util.List;
+
+public class Sistema {
+    private List<Departamento> departamentos;
+    private List<Funcionario> funcionarios;
+    private List<Projeto> projetos;
+
+    public Sistema() {
+        departamentos = new ArrayList<>();
+        funcionarios = new ArrayList<>();
+        projetos = new ArrayList<>();
+    }
+
+    public void adicionarDepartamento(Departamento departamento) {
+        departamentos.add(departamento);
+    }
+
+    public void adicionarFuncionario(Funcionario funcionario) {
+        funcionarios.add(funcionario);
+    }
+
+    public void adicionarProjeto(Projeto projeto) {
+        projetos.add(projeto);
+    }
+
+    public void atribuirFuncionarioProjeto(Funcionario funcionario, Projeto projeto) {
+        projeto.adicionarFuncionario(funcionario);
+        funcionario.adicionarProjeto(projeto);
+    }
+
+    public double calcularMediaSalarialDepartamento(Departamento departamento) {
+        double somaSalarial = 0;
+        int quantidadeFuncionarios = 0;
+        for (Funcionario f : departamento.getFuncionarios()) {
+            somaSalarial += f.getSalario();
+            quantidadeFuncionarios++;
+        }
+        return quantidadeFuncionarios == 0 ? 0 : somaSalarial / quantidadeFuncionarios;
+    }
+
+    public void exibirProjetosFuncionario(Funcionario funcionario) {
+        System.out.println("Projetos de " + funcionario.getNome() + ":");
+        for (Projeto p : funcionario.getProjetos()) {
+            System.out.println(p.getNome());
+        }
+    }
+
+    public static void main(String[] args) {
+        Sistema sistema = new Sistema();
+
+        Departamento departamentoTI = new Departamento("TI");
+        Departamento departamentoRH = new Departamento("RH");
+
+        Funcionario funcionario1 = new Funcionario("João", 5000);
+        Funcionario funcionario2 = new Funcionario("Maria", 4000);
+        Funcionario funcionario3 = new Funcionario("Carlos", 6000);
+
+        Projeto projeto1 = new Projeto("Desenvolvimento de Software");
+        Projeto projeto2 = new Projeto("Treinamento de RH");
+
+        sistema.adicionarDepartamento(departamentoTI);
+        sistema.adicionarDepartamento(departamentoRH);
+
+        sistema.adicionarFuncionario(funcionario1);
+        sistema.adicionarFuncionario(funcionario2);
+        sistema.adicionarFuncionario(funcionario3);
+
+        sistema.adicionarProjeto(projeto1);
+        sistema.adicionarProjeto(projeto2);
+
+        departamentoTI.adicionarFuncionario(funcionario1);
+        departamentoTI.adicionarFuncionario(funcionario3);
+
+        departamentoRH.adicionarFuncionario(funcionario2);
+
+        sistema.atribuirFuncionarioProjeto(funcionario1, projeto1);
+        sistema.atribuirFuncionarioProjeto(funcionario2, projeto2);
+        sistema.atribuirFuncionarioProjeto(funcionario3, projeto1);
+
+        sistema.exibirProjetosFuncionario(funcionario1);
+        sistema.exibirProjetosFuncionario(funcionario2);
+        sistema.exibirProjetosFuncionario(funcionario3);
+
+        System.out.println("Média salarial do departamento TI: " + sistema.calcularMediaSalarialDepartamento(departamentoTI));
+        System.out.println("Média salarial do departamento RH: " + sistema.calcularMediaSalarialDepartamento(departamentoRH));
+    }
+}
+
+//Classe 1
+import java.util.ArrayList;
+import java.util.List;
+
+public class Funcionario {
+    private String nome;
+    private double salario;
+    private List<Projeto> projetos;
+
+    public Funcionario(String nome, double salario) {
+        this.nome = nome;
+        this.salario = salario;
+        this.projetos = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public double getSalario() {
+        return salario;
+    }
+
+    public List<Projeto> getProjetos() {
+        return projetos;
+    }
+
+    public void adicionarProjeto(Projeto projeto) {
+        projetos.add(projeto);
+    }
+}
+
+//Classe 2
+import java.util.ArrayList;
+import java.util.List;
+
+public class Departamento {
+    private String nome;
+    private List<Funcionario> funcionarios;
+
+    public Departamento(String nome) {
+        this.nome = nome;
+        this.funcionarios = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Funcionario> getFuncionarios() {
+        return funcionarios;
+    }
+
+    public void adicionarFuncionario(Funcionario funcionario) {
+        funcionarios.add(funcionario);
+    }
+}
+
+//Classe 3
+import java.util.ArrayList;
+import java.util.List;
+
+public class Projeto {
+    private String nome;
+    private List<Funcionario> funcionarios;
+
+    public Projeto(String nome) {
+        this.nome = nome;
+        this.funcionarios = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Funcionario> getFuncionarios() {
+        return funcionarios;
+    }
+
+    public void adicionarFuncionario(Funcionario funcionario) {
+        funcionarios.add(funcionario);
+    }
+}
+
