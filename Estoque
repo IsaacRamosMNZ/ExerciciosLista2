@@ -1,0 +1,147 @@
+//Main
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Estoque {
+    private List<Produto> produtos;
+    private List<Fornecedor> fornecedores;
+
+    public Estoque() {
+        produtos = new ArrayList<>();
+        fornecedores = new ArrayList<>();
+    }
+
+    public void adicionarProduto(Produto produto) {
+        produtos.add(produto);
+    }
+
+    public void adicionarFornecedor(Fornecedor fornecedor) {
+        fornecedores.add(fornecedor);
+    }
+
+    public void listarProdutosEstoqueBaixo() {
+        System.out.println("Produtos com estoque baixo:");
+        for (Produto produto : produtos) {
+            if (produto.estoqueBaixo()) {
+                System.out.println(produto.getNome() + " - " + produto.getQuantidade() + " unidades");
+            }
+        }
+    }
+
+    public void fazerPedido(Produto produto, int quantidade, Fornecedor fornecedor) {
+        Pedido pedido = new Pedido(produto, quantidade, fornecedor);
+        pedido.processarPedido();
+    }
+
+    public static void main(String[] args) {
+        Estoque estoque = new Estoque();
+
+        Produto produto1 = new Produto("Camiseta", 10, 29.90);
+        Produto produto2 = new Produto("Calça", 3, 99.90);
+        Produto produto3 = new Produto("Tênis", 7, 149.90);
+
+        Fornecedor fornecedor1 = new Fornecedor("Fornecedor A", "1234-5678");
+        Fornecedor fornecedor2 = new Fornecedor("Fornecedor B", "9876-5432");
+
+        estoque.adicionarProduto(produto1);
+        estoque.adicionarProduto(produto2);
+        estoque.adicionarProduto(produto3);
+
+        estoque.adicionarFornecedor(fornecedor1);
+        estoque.adicionarFornecedor(fornecedor2);
+
+        // Listar produtos com estoque baixo
+        estoque.listarProdutosEstoqueBaixo();
+
+        // Fazer pedido de produtos com estoque baixo
+        estoque.fazerPedido(produto2, 20, fornecedor1);
+        estoque.fazerPedido(produto3, 10, fornecedor2);
+
+        // Listar produtos com estoque baixo novamente após o pedido
+        estoque.listarProdutosEstoqueBaixo();
+    }
+}
+
+//Classe 1
+public class Produto {
+    private String nome;
+    private int quantidade;
+    private double preco;
+
+    public Produto(String nome, int quantidade, double preco) {
+        this.nome = nome;
+        this.quantidade = quantidade;
+        this.preco = preco;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public double getPreco() {
+        return preco;
+    }
+
+    public void adicionarEstoque(int quantidade) {
+        this.quantidade += quantidade;
+    }
+
+    public void reduzirEstoque(int quantidade) {
+        if (this.quantidade >= quantidade) {
+            this.quantidade -= quantidade;
+        } else {
+            System.out.println("Estoque insuficiente para o produto " + nome);
+        }
+    }
+
+    public boolean estoqueBaixo() {
+        return quantidade < 5; // Definindo o limite de estoque baixo
+    }
+}
+
+//Classe 2
+public class Fornecedor {
+    private String nome;
+    private String contato;
+
+    public Fornecedor(String nome, String contato) {
+        this.nome = nome;
+        this.contato = contato;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getContato() {
+        return contato;
+    }
+
+    public void fazerPedido(Produto produto, int quantidade) {
+        System.out.println("Pedido enviado para " + nome + ": " + quantidade + " unidades de " + produto.getNome());
+        produto.adicionarEstoque(quantidade);
+    }
+}
+
+//Classe 3
+public class Pedido {
+    private Produto produto;
+    private int quantidade;
+    private Fornecedor fornecedor;
+
+    public Pedido(Produto produto, int quantidade, Fornecedor fornecedor) {
+        this.produto = produto;
+        this.quantidade = quantidade;
+        this.fornecedor = fornecedor;
+    }
+
+    public void processarPedido() {
+        fornecedor.fazerPedido(produto, quantidade);
+        System.out.println("Pedido de " + quantidade + " unidades de " + produto.getNome() + " processado.");
+    }
+}
