@@ -1,0 +1,153 @@
+//Main
+import java.util.ArrayList;
+import java.util.List;
+
+public class SistemaClinica {
+    private List<Medico> medicos;
+    private List<Paciente> pacientes;
+
+    public SistemaClinica() {
+        medicos = new ArrayList<>();
+        pacientes = new ArrayList<>();
+    }
+
+    public void adicionarMedico(Medico medico) {
+        medicos.add(medico);
+    }
+
+    public void adicionarPaciente(Paciente paciente) {
+        pacientes.add(paciente);
+    }
+
+    public void agendarConsulta(Medico medico, Paciente paciente, String data) {
+        Consulta consulta = new Consulta(medico, paciente, data);
+        medico.adicionarConsulta(consulta);
+        paciente.adicionarConsulta(consulta);
+    }
+
+    public void listarPacientesPorMedico(Medico medico) {
+        System.out.println("Pacientes atendidos por " + medico.getNome() + ":");
+        for (Paciente paciente : medico.getPacientes()) {
+            System.out.println(paciente.getNome());
+        }
+    }
+
+    public void exibirProximasConsultas(Medico medico) {
+        System.out.println("Próximas consultas de " + medico.getNome() + ":");
+        for (Consulta consulta : medico.getConsultas()) {
+            System.out.println("Paciente: " + consulta.getPaciente().getNome() + " - Data: " + consulta.getData());
+        }
+    }
+
+    public static void main(String[] args) {
+        SistemaClinica sistema = new SistemaClinica();
+
+        Medico medico1 = new Medico("Dr. João");
+        Medico medico2 = new Medico("Dra. Maria");
+
+        Paciente paciente1 = new Paciente("Carlos");
+        Paciente paciente2 = new Paciente("Ana");
+
+        sistema.adicionarMedico(medico1);
+        sistema.adicionarMedico(medico2);
+
+        sistema.adicionarPaciente(paciente1);
+        sistema.adicionarPaciente(paciente2);
+
+        sistema.agendarConsulta(medico1, paciente1, "2023-10-15");
+        sistema.agendarConsulta(medico1, paciente2, "2023-10-16");
+
+        sistema.agendarConsulta(medico2, paciente1, "2023-10-17");
+
+        sistema.listarPacientesPorMedico(medico1);
+        sistema.listarPacientesPorMedico(medico2);
+
+        sistema.exibirProximasConsultas(medico1);
+        sistema.exibirProximasConsultas(medico2);
+    }
+}
+
+//Classe 1
+import java.util.ArrayList;
+import java.util.List;
+
+public class Medico {
+    private String nome;
+    private List<Consulta> consultas;
+
+    public Medico(String nome) {
+        this.nome = nome;
+        this.consultas = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public List<Paciente> getPacientes() {
+        List<Paciente> pacientes = new ArrayList<>();
+        for (Consulta consulta : consultas) {
+            pacientes.add(consulta.getPaciente());
+        }
+        return pacientes;
+    }
+
+    public void adicionarConsulta(Consulta consulta) {
+        consultas.add(consulta);
+    }
+}
+
+//Classe 2
+import java.util.ArrayList;
+import java.util.List;
+
+public class Paciente {
+    private String nome;
+    private List<Consulta> consultas;
+
+    public Paciente(String nome) {
+        this.nome = nome;
+        this.consultas = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public void adicionarConsulta(Consulta consulta) {
+        consultas.add(consulta);
+    }
+}
+
+//Classe 3
+public class Consulta {
+    private Medico medico;
+    private Paciente paciente;
+    private String data;
+
+    public Consulta(Medico medico, Paciente paciente, String data) {
+        this.medico = medico;
+        this.paciente = paciente;
+        this.data = data;
+    }
+
+    public Medico getMedico() {
+        return medico;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public String getData() {
+        return data;
+    }
+}
