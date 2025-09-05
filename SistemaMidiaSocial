@@ -1,0 +1,126 @@
+//Main
+import java.util.ArrayList;
+import java.util.List;
+
+public class SistemaMidiaSocial {
+    private List<Usuario> usuarios;
+
+    public SistemaMidiaSocial() {
+        usuarios = new ArrayList<>();
+    }
+
+    public void adicionarUsuario(Usuario usuario) {
+        usuarios.add(usuario);
+    }
+
+    public void listarPublicacoesUsuario(Usuario usuario) {
+        System.out.println("Publicações de " + usuario.getNome() + ":");
+        for (Publicacao p : usuario.getPublicacoes()) {
+            System.out.println(p.getTexto());
+            p.listarComentarios();
+        }
+    }
+
+    public static void main(String[] args) {
+        SistemaMidiaSocial sistema = new SistemaMidiaSocial();
+
+        // Criando usuários
+        Usuario usuario1 = new Usuario("João");
+        Usuario usuario2 = new Usuario("Maria");
+
+        // Adicionando usuários ao sistema
+        sistema.adicionarUsuario(usuario1);
+        sistema.adicionarUsuario(usuario2);
+
+        // Criando publicações
+        Publicacao publicacao1 = new Publicacao("Meu primeiro post!");
+        Publicacao publicacao2 = new Publicacao("Aprendendo Java!");
+
+        // Adicionando publicações aos usuários
+        usuario1.criarPublicacao(publicacao1);
+        usuario2.criarPublicacao(publicacao2);
+
+        // Criando comentários
+        Comentario comentario1 = new Comentario("Parabéns pelo post!");
+        Comentario comentario2 = new Comentario("Isso é incrível!");
+
+        // Adicionando comentários nas publicações
+        publicacao1.adicionarComentario(comentario1);
+        publicacao2.adicionarComentario(comentario2);
+
+        // Listando publicações de um usuário
+        sistema.listarPublicacoesUsuario(usuario1);
+        sistema.listarPublicacoesUsuario(usuario2);
+    }
+}
+
+//Classe 1
+import java.util.ArrayList;
+import java.util.List;
+
+public class Usuario {
+    private String nome;
+    private List<Publicacao> publicacoes;
+
+    public Usuario(String nome) {
+        this.nome = nome;
+        this.publicacoes = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Publicacao> getPublicacoes() {
+        return publicacoes;
+    }
+
+    public void criarPublicacao(Publicacao publicacao) {
+        publicacoes.add(publicacao);
+    }
+}
+
+//Classe 2
+import java.util.ArrayList;
+import java.util.List;
+
+public class Publicacao {
+    private String texto;
+    private List<Comentario> comentarios;
+
+    public Publicacao(String texto) {
+        this.texto = texto;
+        this.comentarios = new ArrayList<>();
+    }
+
+    public String getTexto() {
+        return texto;
+    }
+
+    public void adicionarComentario(Comentario comentario) {
+        comentarios.add(comentario);
+    }
+
+    public void listarComentarios() {
+        if (comentarios.isEmpty()) {
+            System.out.println("Nenhum comentário ainda.");
+        } else {
+            for (Comentario comentario : comentarios) {
+                System.out.println("- " + comentario.getTexto());
+            }
+        }
+    }
+}
+
+//Classe 3
+public class Comentario {
+    private String texto;
+
+    public Comentario(String texto) {
+        this.texto = texto;
+    }
+
+    public String getTexto() {
+        return texto;
+    }
+}
