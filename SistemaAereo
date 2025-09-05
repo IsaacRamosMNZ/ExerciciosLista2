@@ -1,0 +1,156 @@
+//Main
+import java.util.ArrayList;
+import java.util.List;
+
+public class SistemaAereo {
+    private List<Passageiro> passageiros;
+    private List<Voo> voos;
+
+    public SistemaAereo() {
+        passageiros = new ArrayList<>();
+        voos = new ArrayList<>();
+    }
+
+    public void adicionarPassageiro(Passageiro passageiro) {
+        passageiros.add(passageiro);
+    }
+
+    public void adicionarVoo(Voo voo) {
+        voos.add(voo);
+    }
+
+    public void listarReservasPassageiro(Passageiro passageiro) {
+        System.out.println("Reservas de " + passageiro.getNome() + ":");
+        for (Reserva reserva : passageiro.getReservas()) {
+            System.out.println("Voo: " + reserva.getVoo().getCodigo() + " - Data: " + reserva.getVoo().getData());
+        }
+    }
+
+    public boolean verificarDisponibilidadeVoo(Voo voo) {
+        return voo.getAssentosDisponiveis() > 0;
+    }
+
+    public static void main(String[] args) {
+        SistemaAereo sistema = new SistemaAereo();
+
+      
+        Passageiro passageiro1 = new Passageiro("João");
+        Passageiro passageiro2 = new Passageiro("Maria");
+
+     
+        Voo voo1 = new Voo("A101", "2023-10-15", 50);
+        Voo voo2 = new Voo("B202", "2023-10-16", 0); // Sem assentos disponíveis
+
+     
+        sistema.adicionarPassageiro(passageiro1);
+        sistema.adicionarPassageiro(passageiro2);
+        sistema.adicionarVoo(voo1);
+        sistema.adicionarVoo(voo2);
+
+      
+        if (sistema.verificarDisponibilidadeVoo(voo1)) {
+            Reserva reserva1 = new Reserva(passageiro1, voo1);
+            reserva1.processarReserva();
+        } else {
+            System.out.println("Voo " + voo1.getCodigo() + " sem assentos disponíveis.");
+        }
+
+        if (sistema.verificarDisponibilidadeVoo(voo2)) {
+            Reserva reserva2 = new Reserva(passageiro2, voo2);
+            reserva2.processarReserva();
+        } else {
+            System.out.println("Voo " + voo2.getCodigo() + " sem assentos disponíveis.");
+        }
+
+      
+        sistema.listarReservasPassageiro(passageiro1);
+        sistema.listarReservasPassageiro(passageiro2);
+    }
+}
+
+//Classe 1
+import java.util.ArrayList;
+import java.util.List;
+
+public class Passageiro {
+    private String nome;
+    private List<Reserva> reservas;
+
+    public Passageiro(String nome) {
+        this.nome = nome;
+        this.reservas = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void adicionarReserva(Reserva reserva) {
+        reservas.add(reserva);
+    }
+}
+
+//Classe 2
+public class Voo {
+    private String codigo;
+    private String data;
+    private int assentosDisponiveis;
+
+    public Voo(String codigo, String data, int assentosDisponiveis) {
+        this.codigo = codigo;
+        this.data = data;
+        this.assentosDisponiveis = assentosDisponiveis;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public int getAssentosDisponiveis() {
+        return assentosDisponiveis;
+    }
+
+    public void reservarAssento() {
+        if (assentosDisponiveis > 0) {
+            assentosDisponiveis--;
+        }
+    }
+}
+
+
+//Classe 3
+public class Reserva {
+    private Passageiro passageiro;
+    private Voo voo;
+
+    public Reserva(Passageiro passageiro, Voo voo) {
+        this.passageiro = passageiro;
+        this.voo = voo;
+    }
+
+    public Passageiro getPassageiro() {
+        return passageiro;
+    }
+
+    public Voo getVoo() {
+        return voo;
+    }
+
+    public void processarReserva() {
+        if (voo.getAssentosDisponiveis() > 0) {
+            voo.reservarAssento();
+            passageiro.adicionarReserva(this);
+            System.out.println("Reserva confirmada para " + passageiro.getNome() + " no voo " + voo.getCodigo());
+        } else {
+            System.out.println("Não há assentos disponíveis para " + passageiro.getNome() + " no voo " + voo.getCodigo());
+        }
+    }
+}
